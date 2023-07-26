@@ -7,6 +7,23 @@ const deck = [];
 const tipos = ['C', 'H', 'S', 'D'];
 const especiales = ['A', 'J', 'Q', 'K'];
 
+let puntosJugador = 0;
+let puntosComputadora = 0;
+
+// Referencias al HTML
+const btnNewGame = document.querySelector('#btn-new-game');
+const btnPedirCarta = document.querySelector('#btn-pedir-carta');
+const btnDetener = document.querySelector('#btn-detener');
+const contenedorCartasJugador = document.querySelector('#jugador-cartas');
+const contenedorCartasComputadora = document.querySelector(
+  '#computadora-cartas'
+);
+const [elementoJugadorPuntuacion, elementoComputadoraPuntuacion] =
+  document.querySelectorAll('small');
+
+// jugador
+const cartasJugador = [];
+
 const crearDeck = () => {
   for (let i = 2; i <= 10; i++) {
     for (const tipo of tipos) {
@@ -32,7 +49,36 @@ const mezclarDeck = (arr) => {
   }
 };
 
+const pedirCarta = (arr) => {
+  if (arr.length <= 0) {
+    throw 'No hay cartas en el deck.';
+  }
+  return arr.pop();
+};
+
+const valorCarta = (carta) => {
+  const valor = carta.substring(0, carta.length - 1);
+
+  return !isNaN(valor)
+    ? Number.parseInt(valor)
+    : valor.toUpperCase() === 'A'
+    ? 11
+    : 10;
+};
+
+// Eventos
+btnPedirCarta.addEventListener('click', function () {
+  const carta = pedirCarta(deck);
+  puntosJugador += valorCarta(carta);
+
+  elementoJugadorPuntuacion.innerText = puntosJugador;
+});
+
 crearDeck();
-console.log(deck);
 mezclarDeck(deck);
-console.log(deck);
+
+console.log(btnNewGame);
+console.log(btnPedirCarta);
+console.log(btnDetener);
+console.log(contenedorCartasJugador);
+console.log(contenedorCartasComputadora);
