@@ -1,0 +1,46 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #2f4f30;
+  font-size: 1.6rem;
+  color: #fff;
+}
+
+.header {
+  text-align: center;
+  background-color: #000;
+  color: #fff;
+  padding: 2rem 0;
+}
+
+.titulo {
+  font-size: 3rem;
+}
+
+.btn {
+  font-size: 2rem;
+}
+
+.carta {
+  width: 15rem;
+}
+
+.carta:not(:last-of-type) {
+  margin-right: -7.5rem;
+}
+
+.jugador-cartas,
+.computadora-cartas {
+  min-height: 18rem;
+}
