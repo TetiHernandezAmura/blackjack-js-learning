@@ -3,7 +3,7 @@
 // 2S = 2 Spades
 // 2C = 2 Diamonds
 
-const deck = [];
+let deck = [];
 const tipos = ['C', 'H', 'S', 'D'];
 const especiales = ['A', 'J', 'Q', 'K'];
 
@@ -22,7 +22,6 @@ const [elementoJugadorPuntuacion, elementoComputadoraPuntuacion] =
   document.querySelectorAll('small');
 
 // jugador
-const cartasJugador = [];
 
 const crearDeck = () => {
   for (let i = 2; i <= 10; i++) {
@@ -49,6 +48,7 @@ const mezclarDeck = (arr) => {
   }
 };
 
+// Trae una carta en la forma de: '2H'
 const pedirCarta = (arr) => {
   if (arr.length <= 0) {
     throw 'No hay cartas en el deck.';
@@ -56,6 +56,7 @@ const pedirCarta = (arr) => {
   return arr.pop();
 };
 
+// Devuelve el valor al recibir una carta en forma de: '2H'
 const valorCarta = (carta) => {
   const valor = carta.substring(0, carta.length - 1);
 
@@ -66,6 +67,7 @@ const valorCarta = (carta) => {
     : 10;
 };
 
+// Crea una carta con imagen y la inserta en el contenedor
 const crearCartaHTML = (carta, contenedorCartas) => {
   const cartaHTML = document.createElement('img');
   cartaHTML.classList.add('carta');
@@ -73,6 +75,7 @@ const crearCartaHTML = (carta, contenedorCartas) => {
   contenedorCartas.append(cartaHTML);
 };
 
+// Ejecuta el turno de la computadora en base a lo hecho por el jugador.
 const turnoComputadora = (puntosJugador) => {
   setTimeout(() => {
     if (puntosComputadora < puntosJugador) {
@@ -88,6 +91,45 @@ const turnoComputadora = (puntosJugador) => {
   }, 750);
 };
 
+// Obtiene el ganador
+const obtenerGanador = (puntosJugador, puntosComputadora) => {
+  return puntosJugador === 21
+    ? 'Jugador'
+    : puntosJugador < 21 && puntosComputadora > 21
+    ? 'Jugador'
+    : 'Computadora';
+};
+
+// Muestra al ganador en un modal.
+const mostrarGanador = (ganador) => {
+  const modal = document.createElement('div');
+  modal.classList.add('modale');
+  const textoGanador = document.createElement('h2');
+  textoGanador.innerText = `Ganador: ${ganador}!`;
+  const btnCerrar = document.createElement('button');
+  btnCerrar.classList.add('btn', 'btn-danger');
+  btnCerrar.innerText = 'Cerrar Modal';
+  btnCerrar.addEventListener('click', () => {
+    modal.remove();
+  });
+  modal.append(textoGanador, btnCerrar);
+
+  document.body.prepend(modal);
+};
+
+// Crear nuevo Juego
+const nuevoJuego = () => {
+  deck = [];
+  puntosJugador = 0;
+  puntosComputadora = 0;
+  contenedorCartasJugador.innerHTML = '';
+  contenedorCartasComputadora.innerHTML = '';
+  btnPedirCarta.removeAttribute('disabled');
+  btnDetener.removeAttribute('disabled');
+  crearDeck();
+  mezclarDeck(deck);
+};
+
 // Eventos
 btnPedirCarta.addEventListener('click', function () {
   const carta = pedirCarta(deck);
@@ -100,6 +142,10 @@ btnPedirCarta.addEventListener('click', function () {
     btnPedirCarta.setAttribute('disabled', '');
     btnDetener.setAttribute('disabled', '');
     turnoComputadora(puntosJugador);
+    const ganador = obtenerGanador(puntosJugador, puntosComputadora);
+    window.setTimeout(() => {
+      mostrarGanador(ganador);
+    }, 3500);
   }
 });
 
@@ -107,10 +153,13 @@ btnDetener.addEventListener('click', () => {
   btnDetener.setAttribute('disabled', '');
   btnPedirCarta.setAttribute('disabled', '');
   turnoComputadora(puntosJugador);
+  const ganador = obtenerGanador(puntosJugador, puntosComputadora);
+  window.setTimeout(() => {
+    mostrarGanador(ganador);
+  }, 3500);
 });
 
-crearDeck();
-mezclarDeck(deck);
-console.log(deck);
-
-// TODO: Ver video de Crear Cartas HTML, comparar con mi forma y commit.
+btnNewGame.addEventListener('click', () => {
+  nuevoJuego();
+  console.log(deck);
+});
