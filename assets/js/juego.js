@@ -66,19 +66,51 @@ const valorCarta = (carta) => {
     : 10;
 };
 
+const crearCartaHTML = (carta, contenedorCartas) => {
+  const cartaHTML = document.createElement('img');
+  cartaHTML.classList.add('carta');
+  cartaHTML.src = `assets/cartas/${carta}.png`;
+  contenedorCartas.append(cartaHTML);
+};
+
+const turnoComputadora = (puntosJugador) => {
+  setTimeout(() => {
+    if (puntosComputadora < puntosJugador) {
+      const carta = pedirCarta(deck);
+      crearCartaHTML(carta, contenedorCartasComputadora);
+      puntosComputadora += valorCarta(carta);
+      elementoComputadoraPuntuacion.innerText = puntosComputadora;
+      if (puntosJugador > 21) {
+        return;
+      }
+      turnoComputadora(puntosJugador);
+    }
+  }, 750);
+};
+
 // Eventos
 btnPedirCarta.addEventListener('click', function () {
   const carta = pedirCarta(deck);
+  crearCartaHTML(carta, contenedorCartasJugador);
   puntosJugador += valorCarta(carta);
-
   elementoJugadorPuntuacion.innerText = puntosJugador;
+
+  if (puntosJugador > 21) {
+    console.log('Game over');
+    btnPedirCarta.setAttribute('disabled', '');
+    btnDetener.setAttribute('disabled', '');
+    turnoComputadora(puntosJugador);
+  }
+});
+
+btnDetener.addEventListener('click', () => {
+  btnDetener.setAttribute('disabled', '');
+  btnPedirCarta.setAttribute('disabled', '');
+  turnoComputadora(puntosJugador);
 });
 
 crearDeck();
 mezclarDeck(deck);
+console.log(deck);
 
-console.log(btnNewGame);
-console.log(btnPedirCarta);
-console.log(btnDetener);
-console.log(contenedorCartasJugador);
-console.log(contenedorCartasComputadora);
+// TODO: Ver video de Crear Cartas HTML, comparar con mi forma y commit.
